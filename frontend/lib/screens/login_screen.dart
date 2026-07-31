@@ -39,10 +39,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.surface,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -61,14 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 96,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.blue.shade50,
+                        color: AppColors.info.withValues(alpha: 0.08),
                         border: Border.all(
-                          color: AppColors.primary.withOpacity(0.2),
+                          color: AppColors.primary.withValues(alpha: 0.2),
                           width: 4,
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.primary.withOpacity(0.12),
+                            color: AppColors.primary.withValues(alpha: 0.12),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -122,9 +120,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   Container(
                     height: 52,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
+                      color: AppColors.surfaceLight,
                       borderRadius: BorderRadius.circular(26),
-                      border: Border.all(color: Colors.grey.shade200),
+                      border: Border.all(color: AppColors.border),
                     ),
                     padding: const EdgeInsets.all(4),
                     child: LayoutBuilder(
@@ -146,7 +144,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   borderRadius: BorderRadius.circular(22),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppColors.primary.withOpacity(0.3),
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.3,
+                                      ),
                                       blurRadius: 8,
                                       offset: const Offset(0, 3),
                                     ),
@@ -212,7 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscurePassword
                               ? Icons.visibility_off_outlined
                               : Icons.visibility_outlined,
-                          color: Colors.grey.shade600,
+                          color: AppColors.textSecondary,
                           size: 22,
                         ),
                         onPressed: () => setState(
@@ -254,9 +254,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.secondary,
                         elevation: 2,
-                        shadowColor: AppColors.primary.withOpacity(0.4),
+                        shadowColor: AppColors.primary.withValues(alpha: 0.4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
                         ),
@@ -277,16 +277,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   Center(
                     child: Column(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.account_balance_outlined,
                           size: 48,
-                          color: Colors.grey.shade300,
+                          color: AppColors.border,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Secure University Portal',
                           style: TextStyle(
-                            color: Colors.grey.shade400,
+                            color: AppColors.textSecondary.withValues(alpha: 0.6),
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                           ),
@@ -317,7 +317,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: AnimatedDefaultTextStyle(
             duration: const Duration(milliseconds: 200),
             style: TextStyle(
-              color: isSelected ? Colors.white : AppColors.textPrimary,
+              color: isSelected ? AppColors.secondary : AppColors.textPrimary,
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
               fontSize: 14.5,
             ),
@@ -336,19 +336,20 @@ class _LoginScreenState extends State<LoginScreen> {
   }) {
     return InputDecoration(
       hintText: hintText,
-      hintStyle: TextStyle(
-        color: Colors.grey.shade400,
+      hintStyle: const TextStyle(
+        color: AppColors.textSecondary,
         fontWeight: FontWeight.w400,
         fontSize: 14.5,
       ),
       filled: true,
-      fillColor: Colors.grey.shade50,
-      prefixIcon: Icon(prefixIcon, color: Colors.grey.shade600, size: 22),
+      fillColor: AppColors.surfaceLight,
+      // Removed "const" here because prefixIcon is a method parameter
+      prefixIcon: Icon(prefixIcon, color: AppColors.textSecondary, size: 22),
       suffixIcon: suffixIcon,
       contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
-        borderSide: BorderSide(color: Colors.grey.shade200),
+        borderSide: const BorderSide(color: AppColors.border),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(14),
