@@ -9,22 +9,57 @@ class StudentAttendance extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: Colors.grey.shade50,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          scrolledUnderElevation: 1,
+          shadowColor: Colors.black.withOpacity(0.05),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+            icon: const Icon(
+              Icons.arrow_back_rounded,
+              color: AppColors.textPrimary,
+              size: 24,
+            ),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text('My Attendance', style: TextStyle(color: AppColors.textPrimary, fontSize: 18, fontWeight: FontWeight.bold)),
+          title: const Text(
+            'My Attendance',
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.2,
+            ),
+          ),
           actions: [
-            IconButton(icon: const Icon(Icons.filter_alt_outlined, color: AppColors.textPrimary), onPressed: () {}),
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.filter_alt_outlined,
+                  color: AppColors.textPrimary,
+                  size: 24,
+                ),
+                onPressed: () {},
+              ),
+            ),
           ],
-          bottom: const TabBar(
+          bottom: TabBar(
             labelColor: AppColors.primary,
             unselectedLabelColor: AppColors.textSecondary,
             indicatorColor: AppColors.primary,
-            tabs: [
+            indicatorWeight: 3,
+            indicatorSize: TabBarIndicatorSize.label,
+            labelStyle: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
+            tabs: const [
               Tab(text: 'Overall'),
               Tab(text: 'Subject Wise'),
               Tab(text: 'Month Wise'),
@@ -32,49 +67,101 @@ class StudentAttendance extends StatelessWidget {
           ),
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Graph Placeholder Card
+              // Attendance Overview & Chart Card
               Container(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.grey.shade200),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.02),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Overall Attendance', style: TextStyle(color: AppColors.textSecondary)),
-                            SizedBox(height: 4),
-                            Text('82%', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                            Text(
+                              'Overall Attendance',
+                              style: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                            SizedBox(height: 6),
+                            Text(
+                              '82%',
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.w800,
+                                color: AppColors.textPrimary,
+                                letterSpacing: -0.5,
+                              ),
+                            ),
                           ],
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.green.shade50,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Colors.green.shade200.withOpacity(0.6),
+                            ),
                           ),
-                          child: const Text('Good', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold)),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                width: 6,
+                                height: 6,
+                                decoration: const BoxDecoration(
+                                  color: Colors.green,
+                                  shape: BoxShape.circle,
+                                ),
+                              ),
+                              const SizedBox(width: 6),
+                              const Text(
+                                'Good',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 12.5,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
-                    // Placeholder for Line Chart
+                    const SizedBox(height: 28),
+
+                    // Upgraded Bar Chart Placeholder
                     SizedBox(
-                      height: 150,
+                      height: 160,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _buildChartBar('Jan', 50),
                           _buildChartBar('Feb', 65),
@@ -87,39 +174,90 @@ class StudentAttendance extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
-              const Text('Attendance Summary', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-              const SizedBox(height: 16),
+              const SizedBox(height: 28),
+
+              // Summary Header
+              const Text(
+                'Attendance Summary',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                  letterSpacing: 0.3,
+                ),
+              ),
+              const SizedBox(height: 14),
+
+              // Summary Breakdown Card
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.grey.shade200),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.015),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
                 child: Column(
                   children: [
                     _buildSummaryRow('Total Classes', '120'),
-                    const Divider(height: 1),
+                    Divider(height: 1, color: Colors.grey.shade100),
                     _buildSummaryRow('Classes Attended', '98'),
-                    const Divider(height: 1),
+                    Divider(height: 1, color: Colors.grey.shade100),
                     _buildSummaryRow('Classes Absent', '22'),
-                    const Divider(height: 1),
-                    _buildSummaryRow('Attendance Percentage', '82%', isBold: true),
+                    Divider(height: 1, color: Colors.grey.shade100),
+                    _buildSummaryRow(
+                      'Attendance Percentage',
+                      '82%',
+                      isBold: true,
+                    ),
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
+
+              // Minimum Attendance Notice Banner
               Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade50,
-                  borderRadius: BorderRadius.circular(8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
                 ),
-                child: const Row(
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade50.withOpacity(0.7),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.primary.withOpacity(0.15),
+                  ),
+                ),
+                child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: AppColors.primary, size: 20),
-                    SizedBox(width: 8),
-                    Text('Minimum required attendance is 75%', style: TextStyle(color: AppColors.primary, fontSize: 12)),
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.info_outline_rounded,
+                        color: AppColors.primary,
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Text(
+                        'Minimum required attendance is 75%',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -130,32 +268,81 @@ class StudentAttendance extends StatelessWidget {
     );
   }
 
+  // Polished Chart Bar with background track and rounded pill ends
   Widget _buildChartBar(String label, double percentage) {
+    const double maxBarHeight = 120.0;
+    final double currentHeight = (percentage / 100) * maxBarHeight;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Container(
-          width: 8,
-          height: percentage,
-          decoration: BoxDecoration(
-            color: AppColors.primary,
-            borderRadius: BorderRadius.circular(4),
+        Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // Background Track
+            Container(
+              width: 14,
+              height: maxBarHeight,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+            // Value Bar
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+              width: 14,
+              height: currentHeight,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    AppColors.primary,
+                    AppColors.primary.withOpacity(0.8),
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: AppColors.textSecondary,
           ),
         ),
-        const SizedBox(height: 8),
-        Text(label, style: const TextStyle(fontSize: 10, color: AppColors.textSecondary)),
       ],
     );
   }
 
   Widget _buildSummaryRow(String label, String value, {bool isBold = false}) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: AppColors.textSecondary, fontWeight: isBold ? FontWeight.bold : FontWeight.normal)),
-          Text(value, style: TextStyle(color: AppColors.textPrimary, fontWeight: isBold ? FontWeight.bold : FontWeight.w600)),
+          Text(
+            label,
+            style: TextStyle(
+              color: isBold ? AppColors.textPrimary : AppColors.textSecondary,
+              fontWeight: isBold ? FontWeight.w700 : FontWeight.w500,
+              fontSize: 14.5,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              color: isBold ? AppColors.primary : AppColors.textPrimary,
+              fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
+              fontSize: 15,
+            ),
+          ),
         ],
       ),
     );
