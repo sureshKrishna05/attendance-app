@@ -17,20 +17,20 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surface,
         elevation: 0,
         scrolledUnderElevation: 1,
-        shadowColor: Colors.black.withOpacity(0.05),
+        shadowColor: Colors.black.withValues(alpha: 0.05),
         leading: Padding(
           padding: const EdgeInsets.only(left: 12.0, top: 6.0, bottom: 6.0),
           child: Container(
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.blue.shade50,
+              color: AppColors.info.withValues(alpha: 0.08),
               border: Border.all(
-                color: AppColors.primary.withOpacity(0.2),
+                color: AppColors.primary.withValues(alpha: 0.2),
                 width: 1.5,
               ),
             ),
@@ -98,7 +98,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                 gradient: LinearGradient(
                   colors: [
                     AppColors.primary,
-                    AppColors.primary.withOpacity(0.85),
+                    AppColors.primary.withValues(alpha: 0.85),
                   ],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -106,7 +106,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.28),
+                    color: AppColors.primary.withValues(alpha: 0.28),
                     blurRadius: 16,
                     offset: const Offset(0, 8),
                   ),
@@ -121,7 +121,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                       Text(
                         'Today\'s Classes',
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.85),
+                          color: AppColors.secondary.withValues(alpha: 0.85),
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -130,7 +130,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                       const Text(
                         '2',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.secondary,
                           fontSize: 34,
                           fontWeight: FontWeight.w800,
                           letterSpacing: -0.5,
@@ -141,12 +141,12 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.12),
+                      color: AppColors.secondary.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       Icons.calendar_month_rounded,
-                      color: Colors.white,
+                      color: AppColors.secondary,
                       size: 42,
                     ),
                   ),
@@ -271,12 +271,12 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.surface,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: AppColors.border),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.02),
+                    color: Colors.black.withValues(alpha: 0.02),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -287,7 +287,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: AppColors.primary.withOpacity(0.08),
+                      color: AppColors.primary.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Icon(
@@ -297,11 +297,11 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                     ),
                   ),
                   const SizedBox(width: 14),
-                  Expanded(
+                  const Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Department Meeting',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -309,13 +309,13 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                             color: AppColors.textPrimary,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4),
                         Text(
                           'CSE Department • 18 May 2025',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade600,
+                            color: AppColors.textSecondary,
                           ),
                         ),
                       ],
@@ -325,7 +325,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                     width: 8,
                     height: 8,
                     decoration: const BoxDecoration(
-                      color: Colors.red,
+                      color: AppColors.error,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -340,7 +340,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, -4),
             ),
@@ -350,9 +350,9 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
           currentIndex: _selectedIndex,
           onTap: (index) => setState(() => _selectedIndex = index),
           type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.surface,
           selectedItemColor: AppColors.primary,
-          unselectedItemColor: Colors.grey.shade500,
+          unselectedItemColor: AppColors.textSecondary,
           selectedLabelStyle: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 11,
@@ -402,7 +402,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
     VoidCallback onTap,
   ) {
     return Material(
-      color: Colors.white,
+      color: AppColors.surface,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -410,10 +410,10 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.grey.shade200),
+            border: Border.all(color: AppColors.border),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.015),
+                color: Colors.black.withValues(alpha: 0.015),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -425,7 +425,7 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.08),
+                  color: AppColors.primary.withValues(alpha: 0.08),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: AppColors.primary, size: 26),

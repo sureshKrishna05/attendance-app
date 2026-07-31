@@ -25,12 +25,12 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
     int totalCount = _attendance.length;
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surface,
         elevation: 0,
         scrolledUnderElevation: 1,
-        shadowColor: Colors.black.withOpacity(0.05),
+        shadowColor: Colors.black.withValues(alpha: 0.05),
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -66,7 +66,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
         children: [
           // Class Metadata & Live Stat Summary Card
           Container(
-            color: Colors.white,
+            color: AppColors.surface,
             padding: const EdgeInsets.fromLTRB(18, 12, 18, 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +107,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.08),
+                        color: AppColors.primary.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Text(
@@ -146,9 +146,9 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                     horizontal: 8,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
+                    color: AppColors.surfaceLight,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade200),
+                    border: Border.all(color: AppColors.border),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -156,22 +156,22 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                       _buildStatColumn(
                         'Present',
                         presentCount.toString(),
-                        Colors.green.shade600,
+                        AppColors.success,
                       ),
                       Container(
                         width: 1,
                         height: 32,
-                        color: Colors.grey.shade300,
+                        color: AppColors.border,
                       ),
                       _buildStatColumn(
                         'Absent',
                         absentCount.toString(),
-                        Colors.red.shade600,
+                        AppColors.error,
                       ),
                       Container(
                         width: 1,
                         height: 32,
-                        color: Colors.grey.shade300,
+                        color: AppColors.border,
                       ),
                       _buildStatColumn(
                         'Total',
@@ -206,7 +206,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                       vertical: 12,
                     ),
                     filled: true,
-                    fillColor: Colors.grey.shade100,
+                    fillColor: AppColors.surfaceLight,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
                       borderSide: BorderSide.none,
@@ -254,10 +254,10 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
           Container(
             padding: const EdgeInsets.all(18.0),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
+                  color: Colors.black.withValues(alpha: 0.04),
                   blurRadius: 10,
                   offset: const Offset(0, -4),
                 ),
@@ -271,7 +271,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
                   elevation: 2,
-                  shadowColor: AppColors.primary.withOpacity(0.35),
+                  shadowColor: AppColors.primary.withValues(alpha: 0.35),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16),
                   ),
@@ -297,20 +297,20 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: Colors.grey.shade700),
+          Icon(icon, size: 14, color: AppColors.textSecondary),
           const SizedBox(width: 6),
           Text(
             label,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: Colors.grey.shade800,
+              color: AppColors.textPrimary,
             ),
           ),
         ],
@@ -334,7 +334,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
         Text(
           label,
           style: TextStyle(
-            color: color.withOpacity(0.85),
+            color: color.withValues(alpha: 0.85),
             fontSize: 12,
             fontWeight: FontWeight.w600,
           ),
@@ -347,16 +347,16 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
   Widget _buildStudentRow(int index, String name, String roll) {
     bool isPresent = _attendance[index] ?? true;
     final Color activeAccent =
-        isPresent ? Colors.green.shade600 : Colors.red.shade600;
+        isPresent ? AppColors.success : AppColors.error;
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.015),
+            color: Colors.black.withValues(alpha: 0.015),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -390,7 +390,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                       height: 44,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: activeAccent.withOpacity(0.1),
+                        color: activeAccent.withValues(alpha: 0.1),
                       ),
                       child: Center(
                         child: Text(
@@ -422,10 +422,10 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                           const SizedBox(height: 2),
                           Text(
                             roll,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: Colors.grey.shade600,
+                              color: AppColors.textSecondary,
                             ),
                           ),
                         ],
@@ -445,14 +445,14 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                         decoration: BoxDecoration(
                           color:
                               isPresent
-                                  ? Colors.green.shade600
-                                  : Colors.grey.shade100,
+                                  ? AppColors.success
+                                  : AppColors.surfaceLight,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color:
                                 isPresent
-                                    ? Colors.green.shade600
-                                    : Colors.grey.shade300,
+                                    ? AppColors.success
+                                    : AppColors.border,
                           ),
                         ),
                         child: Row(
@@ -463,7 +463,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                               color:
                                   isPresent
                                       ? Colors.white
-                                      : Colors.grey.shade600,
+                                      : AppColors.textSecondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -474,7 +474,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                                 color:
                                   isPresent
                                       ? Colors.white
-                                      : Colors.grey.shade600,
+                                      : AppColors.textSecondary,
                               ),
                             ),
                           ],
@@ -496,14 +496,14 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                         decoration: BoxDecoration(
                           color:
                               !isPresent
-                                  ? Colors.red.shade600
-                                  : Colors.grey.shade100,
+                                  ? AppColors.error
+                                  : AppColors.surfaceLight,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color:
                                 !isPresent
-                                    ? Colors.red.shade600
-                                    : Colors.grey.shade300,
+                                    ? AppColors.error
+                                    : AppColors.border,
                           ),
                         ),
                         child: Row(
@@ -514,7 +514,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                               color:
                                   !isPresent
                                       ? Colors.white
-                                      : Colors.grey.shade600,
+                                      : AppColors.textSecondary,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -525,7 +525,7 @@ class _FacultyTakeAttendanceState extends State<FacultyTakeAttendance> {
                                 color:
                                   !isPresent
                                       ? Colors.white
-                                      : Colors.grey.shade600,
+                                      : AppColors.textSecondary,
                               ),
                             ),
                           ],

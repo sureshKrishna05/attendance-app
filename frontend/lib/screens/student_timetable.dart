@@ -7,12 +7,12 @@ class StudentTimetable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surface,
         elevation: 0,
         scrolledUnderElevation: 1,
-        shadowColor: Colors.black.withOpacity(0.05),
+        shadowColor: Colors.black.withValues(alpha: 0.05),
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_rounded,
@@ -49,10 +49,10 @@ class StudentTimetable extends StatelessWidget {
           // Elevated Days Header Strip
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppColors.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.03),
+                  color: Colors.black.withValues(alpha: 0.03),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -81,7 +81,7 @@ class StudentTimetable extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.08),
+                    color: AppColors.primary.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(
@@ -179,7 +179,7 @@ class StudentTimetable extends StatelessWidget {
         boxShadow: isSelected
             ? [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withValues(alpha: 0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 3),
                 ),
@@ -208,12 +208,12 @@ class StudentTimetable extends StatelessWidget {
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -282,7 +282,7 @@ class StudentTimetable extends StatelessWidget {
                             vertical: 3,
                           ),
                           decoration: BoxDecoration(
-                            color: indicatorColor.withOpacity(0.1),
+                            color: indicatorColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
@@ -304,15 +304,15 @@ class StudentTimetable extends StatelessWidget {
                         Icon(
                           Icons.location_on_outlined,
                           size: 14,
-                          color: Colors.grey.shade600,
+                          color: AppColors.textSecondary,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           room,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade700,
+                            color: AppColors.textSecondary,
                           ),
                         ),
                         Padding(
@@ -320,8 +320,8 @@ class StudentTimetable extends StatelessWidget {
                           child: Container(
                             width: 4,
                             height: 4,
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade400,
+                            decoration: const BoxDecoration(
+                              color: AppColors.textSecondary,
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -329,15 +329,15 @@ class StudentTimetable extends StatelessWidget {
                         Icon(
                           Icons.person_outline_rounded,
                           size: 14,
-                          color: Colors.grey.shade600,
+                          color: AppColors.textSecondary,
                         ),
                         const SizedBox(width: 4),
                         Text(
                           professor,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w500,
-                            color: Colors.grey.shade700,
+                            color: AppColors.textSecondary,
                           ),
                         ),
                       ],

@@ -9,12 +9,12 @@ class StudentAttendance extends StatelessWidget {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
+        backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.surface,
           elevation: 0,
           scrolledUnderElevation: 1,
-          shadowColor: Colors.black.withOpacity(0.05),
+          shadowColor: Colors.black.withValues(alpha: 0.05),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_rounded,
@@ -76,12 +76,12 @@ class StudentAttendance extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: AppColors.border),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.02),
+                      color: Colors.black.withValues(alpha: 0.02),
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
@@ -123,10 +123,10 @@ class StudentAttendance extends StatelessWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.green.shade50,
+                            color: AppColors.success.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: Colors.green.shade200.withOpacity(0.6),
+                              color: AppColors.success.withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
@@ -136,7 +136,7 @@ class StudentAttendance extends StatelessWidget {
                                 width: 6,
                                 height: 6,
                                 decoration: const BoxDecoration(
-                                  color: Colors.green,
+                                  color: AppColors.success,
                                   shape: BoxShape.circle,
                                 ),
                               ),
@@ -144,7 +144,7 @@ class StudentAttendance extends StatelessWidget {
                               const Text(
                                 'Good',
                                 style: TextStyle(
-                                  color: Colors.green,
+                                  color: AppColors.success,
                                   fontWeight: FontWeight.w700,
                                   fontSize: 12.5,
                                 ),
@@ -191,12 +191,12 @@ class StudentAttendance extends StatelessWidget {
               // Summary Breakdown Card
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: AppColors.border),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.015),
+                      color: Colors.black.withValues(alpha: 0.015),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -205,11 +205,11 @@ class StudentAttendance extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildSummaryRow('Total Classes', '120'),
-                    Divider(height: 1, color: Colors.grey.shade100),
+                    const Divider(height: 1),
                     _buildSummaryRow('Classes Attended', '98'),
-                    Divider(height: 1, color: Colors.grey.shade100),
+                    const Divider(height: 1),
                     _buildSummaryRow('Classes Absent', '22'),
-                    Divider(height: 1, color: Colors.grey.shade100),
+                    const Divider(height: 1),
                     _buildSummaryRow(
                       'Attendance Percentage',
                       '82%',
@@ -227,10 +227,10 @@ class StudentAttendance extends StatelessWidget {
                   vertical: 14,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade50.withOpacity(0.7),
+                  color: AppColors.info.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: AppColors.primary.withOpacity(0.15),
+                    color: AppColors.primary.withValues(alpha: 0.15),
                   ),
                 ),
                 child: Row(
@@ -238,7 +238,7 @@ class StudentAttendance extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -284,7 +284,7 @@ class StudentAttendance extends StatelessWidget {
               width: 14,
               height: maxBarHeight,
               decoration: BoxDecoration(
-                color: Colors.grey.shade100,
+                color: AppColors.surfaceLight,
                 borderRadius: BorderRadius.circular(8),
               ),
             ),
@@ -298,7 +298,7 @@ class StudentAttendance extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     AppColors.primary,
-                    AppColors.primary.withOpacity(0.8),
+                    AppColors.primary.withValues(alpha: 0.8),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

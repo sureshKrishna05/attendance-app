@@ -9,12 +9,12 @@ class StudentInternals extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
+        backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.surface,
           elevation: 0,
           scrolledUnderElevation: 1,
-          shadowColor: Colors.black.withOpacity(0.05),
+          shadowColor: Colors.black.withValues(alpha: 0.05),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_rounded,
@@ -73,12 +73,12 @@ class StudentInternals extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: AppColors.border),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.015),
+                      color: Colors.black.withValues(alpha: 0.015),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -131,12 +131,12 @@ class StudentInternals extends StatelessWidget {
               // Marks Breakdown List Card
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.surface,
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: AppColors.border),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.015),
+                      color: Colors.black.withValues(alpha: 0.015),
                       blurRadius: 8,
                       offset: const Offset(0, 2),
                     ),
@@ -145,17 +145,17 @@ class StudentInternals extends StatelessWidget {
                 child: Column(
                   children: [
                     _buildMarkRow('Data Structures (CSE301)', '18', '25'),
-                    Divider(height: 1, color: Colors.grey.shade100),
+                    const Divider(height: 1),
                     _buildMarkRow('Discrete Mathematics (CSE302)', '20', '25'),
-                    Divider(height: 1, color: Colors.grey.shade100),
+                    const Divider(height: 1),
                     _buildMarkRow(
                       'Database Management Systems (CSE303)',
                       '21',
                       '25',
                     ),
-                    Divider(height: 1, color: Colors.grey.shade100),
+                    const Divider(height: 1),
                     _buildMarkRow('Operating Systems (CSE304)', '19', '25'),
-                    Divider(height: 1, color: Colors.grey.shade100),
+                    const Divider(height: 1),
                     _buildMarkRow('Computer Networks (CSE305)', '22', '25'),
                   ],
                 ),
@@ -166,10 +166,10 @@ class StudentInternals extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.blue.shade50.withOpacity(0.7),
+                  color: AppColors.info.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
-                    color: AppColors.primary.withOpacity(0.15),
+                    color: AppColors.primary.withValues(alpha: 0.15),
                   ),
                 ),
                 child: Row(
@@ -178,7 +178,7 @@ class StudentInternals extends StatelessWidget {
                     Container(
                       padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withOpacity(0.1),
+                        color: AppColors.primary.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(
@@ -244,7 +244,7 @@ class StudentInternals extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.08),
+              color: AppColors.primary.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(

@@ -10,12 +10,12 @@ class FacultyClasses extends StatelessWidget {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
+        backgroundColor: AppColors.background,
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.surface,
           elevation: 0,
           scrolledUnderElevation: 1,
-          shadowColor: Colors.black.withOpacity(0.05),
+          shadowColor: Colors.black.withValues(alpha: 0.05),
           leading: IconButton(
             icon: const Icon(
               Icons.arrow_back_rounded,
@@ -91,7 +91,7 @@ class FacultyClasses extends StatelessWidget {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: AppColors.primary.withOpacity(0.35),
+                color: AppColors.primary.withValues(alpha: 0.35),
                 blurRadius: 14,
                 offset: const Offset(0, 6),
               ),
@@ -124,12 +124,12 @@ class FacultyClasses extends StatelessWidget {
   ) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -189,18 +189,18 @@ class FacultyClasses extends StatelessWidget {
                               const SizedBox(height: 6),
                               Row(
                                 children: [
-                                  Icon(
+                                  const Icon(
                                     Icons.class_outlined,
                                     size: 14,
-                                    color: Colors.grey.shade600,
+                                    color: AppColors.textSecondary,
                                   ),
                                   const SizedBox(width: 6),
                                   Text(
                                     subtitle,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.grey.shade600,
+                                      color: AppColors.textSecondary,
                                     ),
                                   ),
                                 ],
@@ -217,7 +217,7 @@ class FacultyClasses extends StatelessWidget {
                             vertical: 10,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.primary.withOpacity(0.08),
+                            color: AppColors.primary.withValues(alpha: 0.08),
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: Column(
@@ -238,7 +238,7 @@ class FacultyClasses extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: 10.5,
                                   fontWeight: FontWeight.w600,
-                                  color: AppColors.primary.withOpacity(0.85),
+                                  color: AppColors.primary.withValues(alpha: 0.85),
                                 ),
                               ),
                             ],
