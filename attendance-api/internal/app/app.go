@@ -4,22 +4,11 @@ import (
 	"attendance-api/internal/config"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Application struct {
-	Config *config.Config
-	Server *fiber.App
-}
-
-func New(cfg *config.Config) *Application {
-	return &Application{
-		Config: cfg,
-		Server: fiber.New(fiber.Config{
-			AppName: "University Attendance Management API",
-		}),
-	}
-}
-
-func (a *Application) Fiber() *fiber.App {
-	return a.Server
+	Config   *config.Config
+	Server   *fiber.App
+	Database *pgxpool.Pool
 }
