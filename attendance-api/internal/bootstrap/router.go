@@ -1,27 +1,24 @@
 package bootstrap
 
 import (
-	"attendance-api/configs"
-	"attendance-api/internal/modules/auth"
+	"attendance-api/internal/shared/response"
 
 	"github.com/gofiber/fiber/v2"
 )
 
-func SetupRoutes(app *fiber.App, cfg *configs.Config) {
-	// API v1 Group
+func SetupRoutes(app *fiber.App) {
 	api := app.Group("/api/v1")
 
-	// Setup Auth Routes (Public, but requires API Key)
-	auth.SetupRoutes(api, cfg)
-
-	// Example Protected Route
-	api.Get("/protected", ProtectedRoute(cfg), func(c *fiber.Ctx) error {
-		userID := c.Locals("userID")
-		role := c.Locals("role")
-		return c.JSON(fiber.Map{
-			"message": "You have accessed a protected route",
-			"user":    userID,
-			"role":    role,
-		})
+	api.Get("/health", func(c *fiber.Ctx) error {
+		return response.Success(
+			c,
+			fiber.StatusOK,
+			"Attendance API is healthy",
+			fiber.Map{
+				"status":  "UP",
+				"service": "attendance-api",
+				"version": "v1",
+			},
+		)
 	})
 }
