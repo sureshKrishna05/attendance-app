@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: univ_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: univ_project
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - univ_network
+
+  api:
+    build: .
+    container_name: univ_api
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      - APP_ENV=production
+      - PORT=8080
+      - DATABASE_URL=postgres://postgres:postgrespassword@db:5432/univ_project?sslmode=disable
+      - PUBLISHABLE_KEY=pk_live_12345
+      - SECRET_KEY=sk_live_12345
+      - JWT_SECRET=supersecretjwtkey_live
+    depends_on:
+      - db
+    networks:
+      - univ_network
+
+volumes:
+  pgdata:
+
+networks:
+  univ_network:
+    driver: bridge
