@@ -1,9 +1,63 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:frontend/config/api_config.dart';
 import 'package:frontend/theme/app_theme.dart';
 import 'package:frontend/screens/faculty_take_attendance.dart';
 
-class FacultyClasses extends StatelessWidget {
+class FacultyClasses extends StatefulWidget {
   const FacultyClasses({super.key});
+
+  @override
+  State<FacultyClasses> createState() => _FacultyClassesState();
+}
+
+class _FacultyClassesState extends State<FacultyClasses> {
+  List<dynamic> classes = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchClasses();
+  }
+
+  Future<void> _fetchClasses() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+
+      final response = await http.get(
+        Uri.parse('${ApiConfig.baseUrl}/classes/faculty'),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': ApiConfig.publishableKey,
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          classes = data['assignments'];
+          isLoading = false;
+        });
+      } else {
+        setState(() => isLoading = false);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load classes')),
+        );
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Network error: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,40 +107,27 @@ class FacultyClasses extends StatelessWidget {
             ],
           ),
         ),
-        body: ListView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20.0),
-          children: [
-            _buildClassCard(
-              context,
-              'Data Structures (CSE301)',
-              'Semester 4 - Section A',
-              '42',
-            ),
-            const SizedBox(height: 14),
-            _buildClassCard(
-              context,
-              'Operating Systems (CSE304)',
-              'Semester 4 - Section A',
-              '42',
-            ),
-            const SizedBox(height: 14),
-            _buildClassCard(
-              context,
-              'Computer Networks (CSE303)',
-              'Semester 4 - Section B',
-              '40',
-            ),
-            const SizedBox(height: 14),
-            _buildClassCard(
-              context,
-              'Database Management Systems (CSE302)',
-              'Semester 4 - Section A',
-              '42',
-            ),
-            const SizedBox(height: 16),
-          ],
-        ),
+        body: isLoading 
+            ? const Center(child: CircularProgressIndicator())
+            : classes.isEmpty
+                ? const Center(child: Text("No classes assigned", style: TextStyle(color: AppColors.textSecondary)))
+                : ListView.builder(
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20.0),
+                    itemCount: classes.length,
+                    itemBuilder: (context, index) {
+                      final cls = classes[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 14.0),
+                        child: _buildClassCard(
+                          context,
+                          '${cls['subject_id']} - ${cls['class_name']}',
+                          'Semester ${cls['semester']} - Section ${cls['section']}',
+                          '60', // Mocking student count for now until enrolled table is made
+                        ),
+                      );
+                    },
+                  ),
         floatingActionButton: Container(
           decoration: BoxDecoration(
             boxShadow: [

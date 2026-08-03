@@ -5,14 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:frontend/config/api_config.dart';
 
-class StudentTimetable extends StatefulWidget {
-  const StudentTimetable({super.key});
+class FacultyTimetable extends StatefulWidget {
+  const FacultyTimetable({super.key});
 
   @override
-  State<StudentTimetable> createState() => _StudentTimetableState();
+  State<FacultyTimetable> createState() => _FacultyTimetableState();
 }
 
-class _StudentTimetableState extends State<StudentTimetable> {
+class _FacultyTimetableState extends State<FacultyTimetable> {
   List<dynamic> allSlots = [];
   bool isLoading = true;
   String selectedDay = 'Monday';
@@ -31,7 +31,7 @@ class _StudentTimetableState extends State<StudentTimetable> {
       final token = prefs.getString('jwt_token');
 
       final response = await http.get(
-        Uri.parse('${ApiConfig.baseUrl}/timetable/student'),
+        Uri.parse('${ApiConfig.baseUrl}/timetable/faculty'),
         headers: {
           'Content-Type': 'application/json',
           'X-Api-Key': ApiConfig.publishableKey,
@@ -180,8 +180,8 @@ class _StudentTimetableState extends State<StudentTimetable> {
                             '${slot['start_time'].toString().substring(0,5)} - ${slot['end_time'].toString().substring(0,5)}',
                             slot['subject_id'], // Need subject name join ideally, showing code for now
                             slot['subject_id'],
-                            slot['room'],
-                            slot['faculty_name'],
+                            slot['subject_id'], // Room or subject
+                            'Class: ${slot['class_id']}', // Repurposing the professor param to show class ID for faculty
                             AppColors.primary,
                           ),
                         );

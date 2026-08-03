@@ -1,8 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/theme/app_theme.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:frontend/config/api_config.dart';
 
-class FacultyUploadMarks extends StatelessWidget {
+class FacultyUploadMarks extends StatefulWidget {
   const FacultyUploadMarks({super.key});
+
+  @override
+  State<FacultyUploadMarks> createState() => _FacultyUploadMarksState();
+}
+
+class _FacultyUploadMarksState extends State<FacultyUploadMarks> {
+  bool isUploading = false;
+
+  Future<void> _submitMarks() async {
+    setState(() => isUploading = true);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+
+      final requestBody = {
+        "class_id": "CS_SEM5_A",
+        "subject_id": "CS501",
+        "exam_name": "Internal Test 2",
+        "max_marks": 25,
+        "date": "2026-08-15",
+        "marks": [
+          {"student_id": "21CS001", "marks_obtained": 22},
+        ]
+      };
+
+      final response = await http.post(
+        Uri.parse('${ApiConfig.baseUrl}/marks/faculty'),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': ApiConfig.publishableKey,
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 201) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Marks uploaded successfully!')),
+        );
+        Navigator.pop(context);
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed: ${response.body}')),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Network error: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => isUploading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -261,7 +321,7 @@ class FacultyUploadMarks extends StatelessWidget {
             child: SizedBox(
               height: 52,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: isUploading ? null : _submitMarks,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: AppColors.secondary,
@@ -271,14 +331,16 @@ class FacultyUploadMarks extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
-                  'Save Marks',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.4,
-                  ),
-                ),
+                child: isUploading 
+                  ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                  : const Text(
+                      'Save Marks',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
               ),
             ),
           ),

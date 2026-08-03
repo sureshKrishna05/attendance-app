@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/theme/app_theme.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:frontend/config/api_config.dart';
 import 'package:frontend/screens/student_dashboard.dart';
 import 'package:frontend/screens/faculty_dashboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -23,16 +27,58 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  void _login() {
-    if (isStudent) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const StudentDashboard()),
+  bool isLoading = false;
+
+  Future<void> _login() async {
+    setState(() => isLoading = true);
+    
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiConfig.baseUrl}/auth/login'),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': ApiConfig.publishableKey,
+        },
+        body: jsonEncode({
+          'id': idController.text,
+          'password': passwordController.text,
+          'role': isStudent ? 'student' : 'faculty',
+        }),
       );
-    } else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const FacultyDashboard()),
+
+      setState(() => isLoading = false);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('jwt_token', data['token']);
+        await prefs.setString('user_id', data['user']['id']);
+        await prefs.setString('role', data['user']['role']);
+
+        if (!mounted) return;
+        if (isStudent) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const StudentDashboard()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const FacultyDashboard()),
+          );
+        }
+      } else {
+        if (!mounted) return;
+        final errorMsg = jsonDecode(response.body)['error'] ?? 'Unknown error';
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login failed: $errorMsg')),
+        );
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Network error: $e')),
       );
     }
   }
@@ -261,14 +307,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(16),
                         ),
                       ),
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
+                      child: isLoading
+                          ? const SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              'Login',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
                     ),
                   ),
                   const SizedBox(height: 48),

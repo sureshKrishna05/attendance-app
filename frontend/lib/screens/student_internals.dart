@@ -1,8 +1,62 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/theme/app_theme.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:frontend/config/api_config.dart';
 
-class StudentInternals extends StatelessWidget {
+class StudentInternals extends StatefulWidget {
   const StudentInternals({super.key});
+
+  @override
+  State<StudentInternals> createState() => _StudentInternalsState();
+}
+
+class _StudentInternalsState extends State<StudentInternals> {
+  List<dynamic> marks = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchMarks();
+  }
+
+  Future<void> _fetchMarks() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('jwt_token');
+
+      final response = await http.get(
+        Uri.parse('${ApiConfig.baseUrl}/marks/student'),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Api-Key': ApiConfig.publishableKey,
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        setState(() {
+          marks = data['marks'];
+          isLoading = false;
+        });
+      } else {
+        setState(() => isLoading = false);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to load marks')),
+        );
+      }
+    } catch (e) {
+      setState(() => isLoading = false);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Network error: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -142,23 +196,24 @@ class StudentInternals extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Column(
-                  children: [
-                    _buildMarkRow('Data Structures (CSE301)', '18', '25'),
-                    const Divider(height: 1),
-                    _buildMarkRow('Discrete Mathematics (CSE302)', '20', '25'),
-                    const Divider(height: 1),
-                    _buildMarkRow(
-                      'Database Management Systems (CSE303)',
-                      '21',
-                      '25',
-                    ),
-                    const Divider(height: 1),
-                    _buildMarkRow('Operating Systems (CSE304)', '19', '25'),
-                    const Divider(height: 1),
-                    _buildMarkRow('Computer Networks (CSE305)', '22', '25'),
-                  ],
-                ),
+                child: isLoading
+                    ? const Padding(padding: EdgeInsets.all(20), child: Center(child: CircularProgressIndicator()))
+                    : marks.isEmpty
+                        ? const Padding(padding: EdgeInsets.all(20), child: Center(child: Text('No marks uploaded yet')))
+                        : Column(
+                            children: marks.map((mark) {
+                              return Column(
+                                children: [
+                                  _buildMarkRow(
+                                    '${mark['subject_id']} - ${mark['exam_name']}',
+                                    mark['marks_obtained'].toString(),
+                                    mark['max_marks'].toString(),
+                                  ),
+                                  const Divider(height: 1),
+                                ],
+                              );
+                            }).toList(),
+                          ),
               ),
               const SizedBox(height: 24),
 

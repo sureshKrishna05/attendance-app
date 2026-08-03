@@ -8,9 +8,11 @@ import (
 )
 
 type Config struct {
-	AppEnv string
-	Port   string
-	DBURL  string
+	AppEnv         string
+	Port           string
+	DBURL          string
+	SecretKey      string
+	PublishableKey string
 }
 
 var cfg *Config
@@ -31,6 +33,8 @@ func LoadConfig() *Config {
 			"DATABASE_URL",
 			"postgres://postgres:postgres@localhost:5432/univ_project?sslmode=disable",
 		),
+		SecretKey:      getEnv("SECRET_KEY", "my_super_secret_key"),
+		PublishableKey: getEnv("PUBLISHABLE_KEY", "my_publishable_key"),
 	}
 
 	return cfg

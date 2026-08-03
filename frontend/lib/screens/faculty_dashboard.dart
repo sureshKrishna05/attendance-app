@@ -3,6 +3,7 @@ import 'package:frontend/theme/app_theme.dart';
 import 'package:frontend/screens/faculty_classes.dart';
 import 'package:frontend/screens/faculty_take_attendance.dart';
 import 'package:frontend/screens/faculty_upload_marks.dart';
+import 'package:frontend/screens/faculty_timetable.dart';
 
 class FacultyDashboard extends StatefulWidget {
   const FacultyDashboard({super.key});
@@ -220,7 +221,14 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
                 _buildQuickAccessIcon(
                   Icons.calendar_today_outlined,
                   'Timetable',
-                  () {},
+                  () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const FacultyTimetable(),
+                      ),
+                    );
+                  },
                 ),
                 _buildQuickAccessIcon(
                   Icons.insert_chart_outlined,
