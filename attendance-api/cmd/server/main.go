@@ -19,9 +19,16 @@ func main() {
 	db := bootstrap.ConnectDatabase(cfg)
 	defer db.Close()
 
-	// Initialize Fiber App
+	// Initialize Fiber App with Cloudflare proxy support
 	app := fiber.New(fiber.Config{
 		AppName: "University Attendance API v1.1",
+		
+		// Cloudflare Tunnel acts as a proxy, so we trust local IPs
+		EnableTrustedProxyCheck: true,
+		TrustedProxies:          []string{"127.0.0.1", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"},
+		
+		// Cloudflare specifically sets this header with the real user's IP
+		ProxyHeader: "CF-Connecting-IP",
 	})
 
 	// Global Middlewares
