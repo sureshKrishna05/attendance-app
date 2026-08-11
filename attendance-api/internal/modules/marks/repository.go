@@ -11,6 +11,7 @@ type Repository interface {
 	CreateExam(ctx context.Context, exam *Exam) error
 	UploadMarks(ctx context.Context, marks []Mark) error
 	GetStudentMarks(ctx context.Context, studentID string) ([]StudentMarkResult, error)
+	IsFacultyAssignedRightNow(ctx context.Context, facultyID, classID, subjectID string) (bool, error)
 }
 
 type repository struct {
@@ -75,4 +76,18 @@ func (r *repository) GetStudentMarks(ctx context.Context, studentID string) ([]S
 		results = append(results, res)
 	}
 	return results, nil
+}
+
+func (r *repository) IsFacultyAssignedRightNow(ctx context.Context, facultyID, classID, subjectID string) (bool, error) {
+	query := `
+		SELECT EXISTS (
+			SELECT 1 FROM timetable_slots 
+			WHERE faculty_id = $1 AND class_id = $2 AND subject_id = $3
+			AND day_of_week = trim(to_char(CURRENT_DATE, 'Day'))
+			AND CURRENT_TIME BETWEEN start_time AND end_time
+		)
+	`
+	var exists bool
+	err := r.db.QueryRow(ctx, query, facultyID, classID, subjectID).Scan(&exists)
+	return exists, err
 }

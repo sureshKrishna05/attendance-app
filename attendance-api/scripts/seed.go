@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"attendance-api/internal/config"
@@ -14,130 +15,83 @@ func main() {
 	db := bootstrap.ConnectDatabase(cfg)
 	defer db.Close()
 
-	// Initialize tables
-	query := `
-		CREATE TABLE IF NOT EXISTS users (
-			id VARCHAR(50) PRIMARY KEY,
-			password_hash VARCHAR(255) NOT NULL,
-			role VARCHAR(20) NOT NULL CHECK (role IN ('student', 'faculty', 'admin')),
-			name VARCHAR(100) NOT NULL,
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-		);
-
-		CREATE TABLE IF NOT EXISTS attendance_sessions (
-			id VARCHAR(50) PRIMARY KEY,
-			subject_id VARCHAR(50) NOT NULL,
-			class_id VARCHAR(50) NOT NULL,
-			faculty_id VARCHAR(50) NOT NULL REFERENCES users(id),
-			date DATE NOT NULL,
-			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-		);
-
-		CREATE TABLE IF NOT EXISTS attendance_records (
-			session_id VARCHAR(50) NOT NULL REFERENCES attendance_sessions(id) ON DELETE CASCADE,
-			student_id VARCHAR(50) NOT NULL REFERENCES users(id),
-			is_present BOOLEAN NOT NULL,
-			PRIMARY KEY (session_id, student_id)
-		);
-
-		CREATE TABLE IF NOT EXISTS classes (
-			id VARCHAR(50) PRIMARY KEY,
-			name VARCHAR(100) NOT NULL,
-			semester INT NOT NULL,
-			section VARCHAR(10) NOT NULL
-		);
-
-		CREATE TABLE IF NOT EXISTS class_students (
-			class_id VARCHAR(50) NOT NULL REFERENCES classes(id),
-			student_id VARCHAR(50) NOT NULL REFERENCES users(id),
-			PRIMARY KEY (class_id, student_id)
-		);
-
-		CREATE TABLE IF NOT EXISTS faculty_assignments (
-			class_id VARCHAR(50) NOT NULL REFERENCES classes(id),
-			subject_id VARCHAR(50) NOT NULL,
-			faculty_id VARCHAR(50) NOT NULL REFERENCES users(id),
-			PRIMARY KEY (class_id, subject_id, faculty_id)
-		);
-
-		CREATE TABLE IF NOT EXISTS timetable_slots (
-			id VARCHAR(50) PRIMARY KEY,
-			class_id VARCHAR(50) NOT NULL REFERENCES classes(id),
-			day_of_week VARCHAR(15) NOT NULL,
-			start_time TIME NOT NULL,
-			end_time TIME NOT NULL,
-			subject_id VARCHAR(50) NOT NULL,
-			faculty_id VARCHAR(50) NOT NULL REFERENCES users(id),
-			room VARCHAR(50) NOT NULL
-		);
-
-		CREATE TABLE IF NOT EXISTS internal_exams (
-			id VARCHAR(50) PRIMARY KEY,
-			class_id VARCHAR(50) NOT NULL REFERENCES classes(id),
-			subject_id VARCHAR(50) NOT NULL,
-			name VARCHAR(100) NOT NULL,
-			max_marks INT NOT NULL,
-			date DATE NOT NULL
-		);
-
-		CREATE TABLE IF NOT EXISTS internal_marks (
-			exam_id VARCHAR(50) NOT NULL REFERENCES internal_exams(id) ON DELETE CASCADE,
-			student_id VARCHAR(50) NOT NULL REFERENCES users(id),
-			marks_obtained INT NOT NULL,
-			PRIMARY KEY (exam_id, student_id)
-		);
-	`
-	_, err := db.Exec(context.Background(), query)
-	if err != nil {
-		log.Fatalf("Failed to create table: %v", err)
-	}
-
 	repo := users.NewRepository(db)
 	service := users.NewService(repo)
 
-	// Seed Student
-	err = service.RegisterUser(context.Background(), "21CS001", "password123", "student", "Arun Kumar")
-	if err != nil {
-		log.Printf("Failed to seed student (might already exist): %v", err)
-	} else {
-		log.Println("Seeded student: 21CS001")
+	// Seed 2 Faculties
+	faculties := []struct{ id, name string }{
+		{"FAC001", "Dr. Ramesh"},
+		{"FAC002", "Prof. Suresh"},
+	}
+	for _, f := range faculties {
+		if err := service.RegisterUser(context.Background(), f.id, "password123", "faculty", f.name); err != nil {
+			log.Printf("Faculty %s already exists or error: %v", f.id, err)
+		} else {
+			log.Printf("Seeded faculty: %s", f.id)
+		}
 	}
 
-	// Seed Faculty
-	err = service.RegisterUser(context.Background(), "FAC001", "password123", "faculty", "Dr. Ramesh")
-	if err != nil {
-		log.Printf("Failed to seed faculty (might already exist): %v", err)
-	} else {
-		log.Println("Seeded faculty: FAC001")
+	// Seed 10 Students
+	for i := 1; i <= 10; i++ {
+		studentID := fmt.Sprintf("21CS%03d", i)
+		studentName := fmt.Sprintf("Student %d", i)
+		if err := service.RegisterUser(context.Background(), studentID, "password123", "student", studentName); err != nil {
+			log.Printf("Student %s already exists or error: %v", studentID, err)
+		} else {
+			log.Printf("Seeded student: %s", studentID)
+		}
 	}
 
-	// Seed Classes and Assignments
-	classQuery := `INSERT INTO classes (id, name, semester, section) VALUES ('CS_SEM5_A', 'B.Sc Computer Science', 5, 'A') ON CONFLICT DO NOTHING;`
-	db.Exec(context.Background(), classQuery)
+	// Seed 3 Classes
+	classQueries := []string{
+		`INSERT INTO classes (id, name, semester, section) VALUES ('CS_SEM5_A', 'B.Tech CSE', 5, 'A') ON CONFLICT DO NOTHING;`,
+		`INSERT INTO classes (id, name, semester, section) VALUES ('CS_SEM5_B', 'B.Tech CSE', 5, 'B') ON CONFLICT DO NOTHING;`,
+		`INSERT INTO classes (id, name, semester, section) VALUES ('CS_SEM3_A', 'B.Tech CSE', 3, 'A') ON CONFLICT DO NOTHING;`,
+	}
+	for _, q := range classQueries {
+		db.Exec(context.Background(), q)
+	}
 
-	enrollQuery := `INSERT INTO class_students (class_id, student_id) VALUES ('CS_SEM5_A', '21CS001') ON CONFLICT DO NOTHING;`
-	db.Exec(context.Background(), enrollQuery)
+	// Assign Students to Classes
+	// 21CS001 to 21CS004 -> CS_SEM5_A
+	// 21CS005 to 21CS007 -> CS_SEM5_B
+	// 21CS008 to 21CS010 -> CS_SEM3_A
+	for i := 1; i <= 10; i++ {
+		classID := "CS_SEM3_A"
+		if i <= 4 {
+			classID = "CS_SEM5_A"
+		} else if i <= 7 {
+			classID = "CS_SEM5_B"
+		}
+		studentID := fmt.Sprintf("21CS%03d", i)
+		db.Exec(context.Background(), `INSERT INTO class_students (class_id, student_id) VALUES ($1, $2) ON CONFLICT DO NOTHING;`, classID, studentID)
+	}
 
-	assignmentQuery := `INSERT INTO faculty_assignments (class_id, subject_id, faculty_id) VALUES ('CS_SEM5_A', 'CS501', 'FAC001') ON CONFLICT DO NOTHING;`
-	db.Exec(context.Background(), assignmentQuery)
+	// Faculty Assignments
+	// Dr. Ramesh teaches CS501 in SEM5_A and SEM5_B
+	// Prof. Suresh teaches CS301 in SEM3_A
+	assignments := []struct{ class, subject, faculty string }{
+		{"CS_SEM5_A", "CS501", "FAC001"},
+		{"CS_SEM5_B", "CS501", "FAC001"},
+		{"CS_SEM3_A", "CS301", "FAC002"},
+	}
+	for _, a := range assignments {
+		db.Exec(context.Background(), `INSERT INTO faculty_assignments (class_id, subject_id, faculty_id) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING;`, a.class, a.subject, a.faculty)
+	}
 
 	// Seed Timetable
-	timetableQuery := `INSERT INTO timetable_slots (id, class_id, day_of_week, start_time, end_time, subject_id, faculty_id, room) 
-	VALUES 
-	('TT1', 'CS_SEM5_A', 'Monday', '09:00:00', '10:00:00', 'CS501', 'FAC001', 'Room 101'),
-	('TT2', 'CS_SEM5_A', 'Wednesday', '10:00:00', '11:00:00', 'CS501', 'FAC001', 'Room 101')
-	ON CONFLICT DO NOTHING;`
-	db.Exec(context.Background(), timetableQuery)
+	timetables := []struct{ id, class, day, start, end, subject, faculty, room string }{
+		{"TT1", "CS_SEM5_A", "Monday", "09:00:00", "10:00:00", "CS501", "FAC001", "Room 101"},
+		{"TT2", "CS_SEM5_A", "Wednesday", "10:00:00", "11:00:00", "CS501", "FAC001", "Room 101"},
+		{"TT3", "CS_SEM5_B", "Tuesday", "09:00:00", "10:00:00", "CS501", "FAC001", "Room 102"},
+		{"TT4", "CS_SEM5_B", "Thursday", "10:00:00", "11:00:00", "CS501", "FAC001", "Room 102"},
+		{"TT5", "CS_SEM3_A", "Monday", "11:00:00", "12:00:00", "CS301", "FAC002", "Room 201"},
+		{"TT6", "CS_SEM3_A", "Friday", "10:00:00", "11:00:00", "CS301", "FAC002", "Room 201"},
+	}
+	for _, t := range timetables {
+		db.Exec(context.Background(), `INSERT INTO timetable_slots (id, class_id, day_of_week, start_time, end_time, subject_id, faculty_id, room) 
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8) ON CONFLICT DO NOTHING;`, t.id, t.class, t.day, t.start, t.end, t.subject, t.faculty, t.room)
+	}
 
-	// Seed Internal Exams & Marks
-	examQuery := `INSERT INTO internal_exams (id, class_id, subject_id, name, max_marks, date)
-	VALUES ('EXAM1', 'CS_SEM5_A', 'CS501', 'Internal Assessment 1', 50, '2026-08-01') ON CONFLICT DO NOTHING;`
-	db.Exec(context.Background(), examQuery)
-
-	markQuery := `INSERT INTO internal_marks (exam_id, student_id, marks_obtained)
-	VALUES ('EXAM1', '21CS001', 45) ON CONFLICT DO NOTHING;`
-	db.Exec(context.Background(), markQuery)
-
-	log.Println("Seeding complete.")
+	log.Println("Massive Data Seeding complete.")
 }

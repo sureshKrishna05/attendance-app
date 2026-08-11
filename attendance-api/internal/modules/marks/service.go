@@ -2,6 +2,7 @@ package marks
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 )
@@ -20,6 +21,14 @@ func NewService(repo Repository) Service {
 }
 
 func (s *service) UploadMarks(ctx context.Context, facultyID string, req UploadMarksRequest) error {
+	isAssigned, err := s.repo.IsFacultyAssignedRightNow(ctx, facultyID, req.ClassID, req.SubjectID)
+	if err != nil {
+		return err
+	}
+	if !isAssigned {
+		return fmt.Errorf("faculty is not assigned to this class and subject right now according to the timetable")
+	}
+
 	examID := uuid.New().String()
 
 	exam := &Exam{

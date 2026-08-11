@@ -54,6 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await prefs.setString('jwt_token', data['token']);
         await prefs.setString('user_id', data['user']['id']);
         await prefs.setString('role', data['user']['role']);
+        await prefs.setString('user_name', data['user']['name'] ?? 'User');
 
         if (!mounted) return;
         if (isStudent) {
@@ -69,7 +70,20 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       } else {
         if (!mounted) return;
-        final errorMsg = jsonDecode(response.body)['error'] ?? 'Unknown error';
+        
+        // Debugging prints to find out what Cloudflare/Backend is actually returning
+        print("HTTP Status Code: ${response.statusCode}");
+        print("HTTP Body: '${response.body}'");
+
+        String errorMsg = 'Unknown error (Status: ${response.statusCode})';
+        try {
+          if (response.body.isNotEmpty) {
+             errorMsg = jsonDecode(response.body)['error'] ?? errorMsg;
+          }
+        } catch (e) {
+          errorMsg = 'Server returned non-JSON response: Status ${response.statusCode}';
+        }
+        
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login failed: $errorMsg')),
         );
@@ -77,6 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       setState(() => isLoading = false);
       if (!mounted) return;
+      print("Network/Catch Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Network error: $e')),
       );

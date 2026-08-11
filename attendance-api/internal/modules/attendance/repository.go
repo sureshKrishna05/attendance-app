@@ -11,6 +11,7 @@ type Repository interface {
 	CreateSession(ctx context.Context, session *Session) error
 	CreateRecords(ctx context.Context, records []Record) error
 	GetStudentAttendance(ctx context.Context, studentID string) ([]Record, error)
+	IsFacultyAssignedRightNow(ctx context.Context, facultyID, classID, subjectID string) (bool, error)
 }
 
 type repository struct {
@@ -66,4 +67,18 @@ func (r *repository) GetStudentAttendance(ctx context.Context, studentID string)
 		records = append(records, rec)
 	}
 	return records, nil
+}
+
+func (r *repository) IsFacultyAssignedRightNow(ctx context.Context, facultyID, classID, subjectID string) (bool, error) {
+	query := `
+		SELECT EXISTS (
+			SELECT 1 FROM timetable_slots 
+			WHERE faculty_id = $1 AND class_id = $2 AND subject_id = $3
+			AND day_of_week = trim(to_char(CURRENT_DATE, 'Day'))
+			AND CURRENT_TIME BETWEEN start_time AND end_time
+		)
+	`
+	var exists bool
+	err := r.db.QueryRow(ctx, query, facultyID, classID, subjectID).Scan(&exists)
+	return exists, err
 }

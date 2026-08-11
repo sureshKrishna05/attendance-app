@@ -2,6 +2,7 @@ package attendance
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
@@ -21,6 +22,14 @@ func NewService(repo Repository) Service {
 }
 
 func (s *service) TakeAttendance(ctx context.Context, facultyID string, req TakeAttendanceRequest) error {
+	isAssigned, err := s.repo.IsFacultyAssignedRightNow(ctx, facultyID, req.ClassID, req.SubjectID)
+	if err != nil {
+		return err
+	}
+	if !isAssigned {
+		return fmt.Errorf("faculty is not assigned to this class and subject right now according to the timetable")
+	}
+
 	date, err := time.Parse("2006-01-02", req.Date)
 	if err != nil {
 		return err
