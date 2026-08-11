@@ -312,10 +312,10 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
         ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
+          children: [
+            const Text(
               'Good Morning,',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
                 color: AppColors.textSecondary,
@@ -323,14 +323,14 @@ class _FacultyDashboardState extends State<FacultyDashboard> {
             ),
             Text(
               _userName,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textPrimary,
                 letterSpacing: 0.2,
               ),
             ),
-            Text(
+            const Text(
               'Assistant Professor - CSE',
               style: TextStyle(
                 fontSize: 11.5,
