@@ -13,9 +13,9 @@ func New() (*Application, error) {
 
 	cfg := config.LoadConfig()
 
-	db, err := bootstrap.SetupDatabase(cfg)
-	if err != nil {
-		return nil, fmt.Errorf("database initialization failed: %w", err)
+	db := bootstrap.ConnectDatabase(cfg)
+	if db == nil {
+		return nil, fmt.Errorf("database initialization failed")
 	}
 
 	server := fiber.New(fiber.Config{
@@ -23,7 +23,7 @@ func New() (*Application, error) {
 	})
 
 	bootstrap.SetupMiddlewares(server)
-	bootstrap.SetupRoutes(server)
+	bootstrap.SetupRoutes(server, cfg, db)
 
 	return &Application{
 		Config:   cfg,

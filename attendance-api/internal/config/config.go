@@ -13,6 +13,7 @@ type Config struct {
 	DBURL          string
 	SecretKey      string
 	PublishableKey string
+	AdminSecretKey string
 }
 
 var cfg *Config
@@ -35,6 +36,7 @@ func LoadConfig() *Config {
 		),
 		SecretKey:      getEnv("SECRET_KEY", "my_super_secret_key"),
 		PublishableKey: getEnv("PUBLISHABLE_KEY", "my_publishable_key"),
+		AdminSecretKey: getEnv("ADMIN_SECRET_KEY", "my_admin_secret_key"),
 	}
 
 	return cfg

@@ -9,6 +9,7 @@ import (
 	"attendance-api/internal/modules/marks"
 	"attendance-api/internal/modules/timetable"
 	"attendance-api/internal/modules/users"
+	"attendance-api/internal/modules/admin"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -21,6 +22,7 @@ func SetupRoutes(app *fiber.App, cfg *config.Config, db *pgxpool.Pool) {
 	classesRepo := classes.NewRepository(db)
 	timetableRepo := timetable.NewRepository(db)
 	marksRepo := marks.NewRepository(db)
+	adminRepo := admin.NewRepository(db)
 	
 	// Initialize Services
 	userService := users.NewService(userRepo)
@@ -28,9 +30,13 @@ func SetupRoutes(app *fiber.App, cfg *config.Config, db *pgxpool.Pool) {
 	classesService := classes.NewService(classesRepo)
 	timetableService := timetable.NewService(timetableRepo)
 	marksService := marks.NewService(marksRepo)
+	adminService := admin.NewService(adminRepo)
 
 	// API v1 Group
 	api := app.Group("/api/v1")
+
+	// Setup Admin Routes
+	admin.SetupRoutes(api, cfg, adminService)
 
 	// Setup Auth Routes (Public, but requires API Key)
 	auth.SetupRoutes(api, cfg, userService)

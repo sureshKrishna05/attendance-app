@@ -1,0 +1,25 @@
+# Global Gitignore for Monorepo
+
+# Secrets
+.env
+.env.*
+*.secret
+
+# Mac
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Python / Scripts
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore artifact media generated locally
+.tempmediaStorage/

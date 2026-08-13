@@ -1,4 +1,10 @@
-import 'package:flutter/material.dart';
+import re
+
+with open('lib/screens/student_attendance.dart', 'r') as f:
+    content = f.read()
+
+# Replace the dummy UI with real API fetching
+new_content = """import 'package:flutter/material.dart';
 import 'package:frontend/theme/app_theme.dart';
 import 'package:frontend/services/api_service.dart';
 
@@ -182,13 +188,13 @@ class _StudentAttendanceState extends State<StudentAttendance> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: record['is_present'] ? AppColors.success.withValues(alpha: 0.1) : AppColors.error.withValues(alpha: 0.1),
+                      color: record['is_present'] ? AppColors.success.withValues(alpha: 0.1) : AppColors.danger.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       record['is_present'] ? 'Present' : 'Absent',
                       style: TextStyle(
-                        color: record['is_present'] ? AppColors.success : AppColors.error,
+                        color: record['is_present'] ? AppColors.success : AppColors.danger,
                         fontWeight: FontWeight.w700,
                         fontSize: 12,
                       ),
@@ -196,10 +202,14 @@ class _StudentAttendanceState extends State<StudentAttendance> {
                   ),
                 ],
               ),
-            )),
+            )).toList(),
           ],
         ),
       ),
     );
   }
 }
+"""
+
+with open('lib/screens/student_attendance.dart', 'w') as f:
+    f.write(new_content)

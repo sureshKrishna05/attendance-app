@@ -48,3 +48,14 @@ func RoleMiddleware(allowedRole string) fiber.Handler {
 		return c.Next()
 	}
 }
+
+// AdminMiddleware validates the Admin Secret Key.
+func AdminMiddleware(cfg *config.Config) fiber.Handler {
+	return func(c *fiber.Ctx) error {
+		secret := c.Get("X-Admin-Secret")
+		if secret == "" || secret != cfg.AdminSecretKey {
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "Unauthorized admin access"})
+		}
+		return c.Next()
+	}
+}

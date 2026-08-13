@@ -10,7 +10,7 @@ import (
 
 type Service interface {
 	TakeAttendance(ctx context.Context, facultyID string, req TakeAttendanceRequest) error
-	GetStudentAttendance(ctx context.Context, studentID string) ([]Record, error)
+	GetStudentAttendance(ctx context.Context, studentID string) ([]StudentAttendanceResult, error)
 }
 
 type service struct {
@@ -57,6 +57,6 @@ func (s *service) TakeAttendance(ctx context.Context, facultyID string, req Take
 	return s.repo.CreateRecords(ctx, req.Records)
 }
 
-func (s *service) GetStudentAttendance(ctx context.Context, studentID string) ([]Record, error) {
+func (s *service) GetStudentAttendance(ctx context.Context, studentID string) ([]StudentAttendanceResult, error) {
 	return s.repo.GetStudentAttendance(ctx, studentID)
 }

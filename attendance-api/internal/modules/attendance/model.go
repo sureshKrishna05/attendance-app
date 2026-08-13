@@ -24,3 +24,9 @@ type TakeAttendanceRequest struct {
 	Date      string   `json:"date"` // e.g. "2025-05-20"
 	Records   []Record `json:"records"`
 }
+
+type StudentAttendanceResult struct {
+	SubjectID string `json:"subject_id"`
+	Date      string `json:"date"`
+	IsPresent bool   `json:"is_present"`
+}

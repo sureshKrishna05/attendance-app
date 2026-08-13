@@ -71,10 +71,6 @@ class _LoginScreenState extends State<LoginScreen> {
       } else {
         if (!mounted) return;
         
-        // Debugging prints to find out what Cloudflare/Backend is actually returning
-        print("HTTP Status Code: ${response.statusCode}");
-        print("HTTP Body: '${response.body}'");
-
         String errorMsg = 'Unknown error (Status: ${response.statusCode})';
         try {
           if (response.body.isNotEmpty) {
@@ -91,7 +87,6 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       setState(() => isLoading = false);
       if (!mounted) return;
-      print("Network/Catch Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Network error: $e')),
       );
